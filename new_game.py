@@ -3,18 +3,11 @@ from pyglet.window import key
 from math import radians, cos, sin
 from random import randint
 
-# TO DO
-# def gamestates
-# def reset > reset ship position and health and destroy any remaining asteroids
-        # for asteroid in self.asteroids:
-        #     asteroid.level = 1
-        #     asteroid.destroy()
-        # and make new asteroids
-# 3 first asteroids should be function
-# remove asteroids from list on destruction
-# change graphics
-# implement simple start screen with text (import daniel or something handwritten script)
 
+# fix reset
+# design ship sprite
+# change text font
+# game states would be nice
 
 RESOLUTION = [800, 600]
 CENTER = [RESOLUTION[0]/2, RESOLUTION[1]/2]
@@ -30,18 +23,23 @@ while start_position_y > 200 and start_position_y < 400:
 
 asteroid_start_position = start_position_x, start_position_y
 
+# Giving asteroids an id to remove them from list on destroy()
+
 asteroid_number = -1
 
 def next_asteroid():
     global asteroid_number
     asteroid_number += 1
     return asteroid_number
-# use this to give asteroids an id and check it to remove them from asteroids list.
 
 class AsteroidGame(Game):
 
     def __init__(self):
         super().__init__()
+
+        # Creating a gamestate variable to control game behavior depending on context
+
+        gamestate = "startscreen"
 
         # Creating the player's game element: the ship
 
@@ -50,7 +48,7 @@ class AsteroidGame(Game):
         # Creating the background layer
 
         self.background_layer = Layer()
-        self.background_layer.add(Sprite("images/lined_paper.png"))
+        self.background_layer.add(Sprite("images/background_test.jpg"))
 
         # Creating the game layer and adding the ship
 
@@ -76,6 +74,25 @@ class AsteroidGame(Game):
             self.asteroids.append(asteroid)
             self.game_layer.add(asteroid)
 
+    # Creating reset method to set ship data back to base and remove all remaining asteroids
+
+    def reset(self):
+        self.ship.lives = 3
+        self.ship.speed = 0, 0
+        self.ship.rotation = 0
+        self.ship.rotation_speed = 0
+        self.ship.opacity = 255
+        for asteroid in self.asteroids:
+            asteroid.destroy()
+        self.asteroids = []
+        for asteroid in range(3): 
+            asteroid = Asteroid(asteroid_start_position)
+            self.asteroids.append(asteroid)
+            self.game_layer.add(asteroid)
+        self.ui_layer.gameover_title.text = ""
+        self.ui_layer.gameover_subtitle.text = ""
+        self.ui_layer.gameover_subtitle2.text = ""
+
 class UILayer(Layer):
 
     def __init__(self, ship):
@@ -92,15 +109,16 @@ class UILayer(Layer):
         for life in range(self.ship.lives):
             x, y = position
             x += 19 * life
-            life_sprite = Sprite("images/handdrawn_life.png", (x,y))
+            life_sprite = Sprite("images/pixel_life.png", (x,y))
             self.life_sprites.append(life_sprite)
             self.add(life_sprite)
 
         # Creating gameover text boxes and text
 
-        self.gameover_title = Text("", (CENTER[0], CENTER[1] + 50), 50, color = (255, 255, 255), anchor = "center")
-        self.gameover_subtitle = Text("", (CENTER[0], CENTER[1] - 50), 15, color = (255, 255, 255), anchor = "center")
-        self.add(self.gameover_title, self.gameover_subtitle)
+        self.gameover_title = Text("", (CENTER[0], CENTER[1] + 50), 20, color = (255, 0, 0), anchor = "center")
+        self.gameover_subtitle = Text("", (CENTER[0], CENTER[1] - 10), 15, color = (255, 0, 0), anchor = "center")
+        self.gameover_subtitle2 = Text("", (CENTER[0], CENTER[1] - 30), 15, color = (255, 0, 0), anchor = "center")
+        self.add(self.gameover_title, self.gameover_subtitle, self.gameover_subtitle2)
 
     def update(self, dt):
         super().update(dt)
@@ -116,19 +134,20 @@ class UILayer(Layer):
         # Checking ship lives to display gameover text
 
         if self.ship.lives == 0:
-            self.gameover_title = Text("GAME OVER", (CENTER[0], CENTER[1] + 50), 50, color = (255, 255, 255), anchor = "center")
-            self.gameover_subtitle = Text("In space, no one can hear your ship explode...", (CENTER[0], CENTER[1] - 50), 15, color = (255, 255, 255), anchor = "center")
-            self.add(self.gameover_title, self.gameover_subtitle)
+            self.gameover_title.text = "GAME OVER"
+            self.gameover_subtitle.text = "IN SPACE NO ONE CAN HEAR YOUR SHIP EXPLODE..."
+            self.gameover_subtitle2.text = "PRESS SPACE TO TRY AGAIN"
         else:
             self.gameover_title.text = ""
             self.gameover_subtitle.text = ""
+            self.gameover_subtitle2.text = ""
         
+    # Setting up game restart on space bar press
+
     def on_key_press(self, k, modifiers):
-        # Setting up space bar to restart game
 
         if self.ship.lives <= 0 and k == key.SPACE:
-            # self.game.initialize()
-            #RESET function here
+            self.game.reset()
             return
 
 
@@ -180,19 +199,21 @@ class Asteroid(SpaceElement):
         # Defining the image for the asteroid Sprite depending on its level, 
         # with a central anchor and a random rotation speed
 
+        self.id = next_asteroid()
+
         self.stats = {
             3: {
-            "image": "images/handdrawn_asteroid128.png",
+            "image": "images/pixel_asteroid128.png",
             "anchor": (64,64), 
             "rotation_speed": randint(-20, 20)
             }, 
             2: {
-            "image": "images/handdrawn_asteroid64.png",
+            "image": "images/pixel_asteroid64.png",
             "anchor": (32,32),
             "rotation_speed": randint(-40, 40)
             }, 
             1: {
-            "image": "images/handdrawn_asteroid32.png",
+            "image": "images/pixel_asteroid32.png",
             "anchor": (16, 16),
             "rotation_speed": randint(-80, 80)
             }
@@ -240,6 +261,12 @@ class Asteroid(SpaceElement):
 
     def destroy(self):
 
+        # Removes asteroid from list of asteroids
+
+        for asteroid in self.layer.game.asteroids:
+            if self.id == asteroid.id:
+                self.layer.game.asteroids.remove(asteroid)
+
 
         # Destroys this asteroid
 
@@ -250,7 +277,7 @@ class Asteroid(SpaceElement):
         for _ in range(3):
             self.smaller_asteroid_creation()        
 
-        print(self.layer.game.asteroids)
+        self.level -= 1
 
     def on_collision(self, other):
         super().on_collision(other)
@@ -271,11 +298,11 @@ class Ship(SpaceElement):
 
     def __init__(self, position):
         super().__init__("images/handdrawn_ship.png", position, (32, 64), collision_shape = "circle")
-        self.lives = 1
+        self.lives = 3
         self.rotation_speed = 0
         self.acceleration = 0
-        # self.shooting = False
-        # self.cooldown = 0.0
+        self.shooting = False
+        self.cooldown = 0.0
         self.invincible = 0.0
 
     def update(self, dt):
@@ -293,13 +320,13 @@ class Ship(SpaceElement):
         super().update(dt)
         self.rotation += self.rotation_speed * dt
 
-        # if self.shooting:
-        #     if self.cooldown <= 0.0:
-        #         self.shoot()
-        #         self.cooldown = 0.25
-        #         self.shoot()
-        #     else:
-        #         self.cooldown -= dt
+        if self.shooting:
+            if self.cooldown <= 0.0:
+                self.shoot()
+                self.cooldown = 0.25
+                self.shoot()
+            else:
+                self.cooldown -= dt
 
         if self.invincible > 0.0:
             self.invincible -= dt
@@ -332,7 +359,7 @@ class Ship(SpaceElement):
 
         if k == key.SPACE:
             self.shoot()
-            # self.shooting = True
+            self.shooting = True
 
     def on_key_release(self, k, modifiers):
 
@@ -345,12 +372,15 @@ class Ship(SpaceElement):
         if k == key.LEFT:
             self.rotation_speed += 200
 
+        if k == key.SPACE:
+            self.shooting = False
+
     def destroy(self):
         if self.invincible <= 0.0:
             self.lives -= 1
 
-            if self.lives <= 0:
-                super().destroy()
+            if self.lives < 0:
+                self.opacity = 0
             else:
                 self.invincible = 3
 
@@ -358,7 +388,7 @@ class Ship(SpaceElement):
 class Bullet(SpaceElement):
 
     def __init__(self, position, initial_speed, rotation):
-        super().__init__("images/handdrawn_bullet.png", position, (8, 8), initial_speed, collision_shape="circle")
+        super().__init__("images/pixel_bullet.png", position, (8, 8), initial_speed, collision_shape="circle")
         self.rotation = rotation
         self.start_position = position
         self.lifetime = 3.0
