@@ -76,20 +76,19 @@ class AsteroidGame(Game):
     # Creating reset method to set ship data back to base and remove all remaining asteroids
 
     def reset(self):
+        for asteroid in self.asteroids:
+            asteroid.destroy()
+        self.asteroids = []
         self.ship.position = CENTER
         self.ship.lives = 3
         self.ship.speed = 0, 0
         self.ship.rotation = 0
         self.ship.rotation_speed = 0
         self.ship.opacity = 255
-        for asteroid in self.asteroids:
-            asteroid.destroy()
-        self.asteroids = []
         for asteroid in range(3): 
             asteroid = Asteroid(random_asteroid_start_position())
             self.asteroids.append(asteroid)
             self.game_layer.add(asteroid)
-        print("reset")
 
 class UILayer(Layer):
 
@@ -395,8 +394,8 @@ class Ship(SpaceElement):
             if k == key.LEFT:
                 self.rotation_speed += 200
 
-            if k == key.SPACE:
-                self.shooting = False
+        if k == key.SPACE:
+            self.shooting = False
 
     def destroy(self):
         if self.lives < self.max_lives + 1 and self.lives > 0:
@@ -418,7 +417,6 @@ class Bullet(SpaceElement):
     def on_collision(self, other):
         super().on_collision(other)
         if isinstance(other, Asteroid):
-            other.destroy()
             self.destroy()
 
 

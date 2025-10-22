@@ -8,4 +8,4 @@ init([RESOLUTION[0], RESOLUTION[1]], "ASTEROIDS")
 game = AsteroidGame()
 
 
-game.run()    
+game.run()     
