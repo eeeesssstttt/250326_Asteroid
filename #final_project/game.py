@@ -1,4 +1,4 @@
-from if3_game.engine import Game, Sprite, Layer, Text
+from if3_game.engine import Game, Sprite, Layer
 from pyglet.window import key
 from math import radians, cos, sin
 from random import randint
@@ -206,7 +206,7 @@ class UILayer(Layer):
         self.victory_subtitle2 = Sprite("images/press_space_to_play_again.png", (CENTER[0], CENTER[1] - 38), anchor = (178, 20))
         self.victory_subtitle2.opacity = 0
 
-        self.gameover_subtitle1 = Sprite("images/in_space_no_one_can_hear_your_ship_explode2.png", (CENTER[0], CENTER[1] + 20), anchor = (166, 0))
+        self.gameover_subtitle1 = Sprite("images/in_space_no_one_can_hear_your_ship_explode.png", (CENTER[0], CENTER[1] + 20), anchor = (166, 0))
         self.gameover_subtitle1.opacity = 0
         self.gameover_title = Sprite("images/gameover.png", (CENTER[0], CENTER[1] - 18), anchor = (152, 22))
         self.gameover_title.opacity = 0

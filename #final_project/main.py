@@ -1,4 +1,4 @@
-from if3_game.engine import Layer, Sprite, Text, init
+from if3_game.engine import init
 from game import RESOLUTION, CENTER, AsteroidGame
 
 
