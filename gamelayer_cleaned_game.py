@@ -17,7 +17,7 @@ class AsteroidGame(Game):
 
         # Creating the gamestate and setting it to start
 
-        self.gamestate = "start"
+        self.gamestate = "gameover"
 
         # Creating the player's game element: the ship
 

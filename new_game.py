@@ -36,10 +36,6 @@ class AsteroidGame(Game):
     def __init__(self):
         super().__init__()
 
-        # Creating a gamestate variable to control game behavior depending on context
-
-        gamestate = "startscreen"
-
         # Creating the player's game element: the ship
 
         self.ship = Ship(CENTER)
@@ -66,6 +62,10 @@ class AsteroidGame(Game):
 
         self.asteroids = []
 
+        # Creating list of bullets
+
+        self.bullets = []
+
         # Creating new batch of asteroids and adding them to the game layer
 
         for asteroid in range(3): 
@@ -73,17 +73,22 @@ class AsteroidGame(Game):
             self.asteroids.append(asteroid)
             self.game_layer.add(asteroid)
 
-    # Creating reset method to set ship data back to base and remove all remaining asteroids
-
     def reset(self):
+
+    # Resets ship variables and removes all remaining asteroids and bullets
+
         for asteroid in self.asteroids:
             asteroid.destroy()
         self.asteroids = []
+        for bullet in self.bullets:
+            bullet.destroy()
+        self.bullets = []
         self.ship.position = CENTER
-        self.ship.lives = 3
         self.ship.speed = 0, 0
         self.ship.rotation = 0
         self.ship.rotation_speed = 0
+        self.ship.lives = 3
+        self.ship.invincible = 0.0
         self.ship.opacity = 255
         for asteroid in range(3): 
             asteroid = Asteroid(random_asteroid_start_position())
@@ -295,7 +300,14 @@ class Asteroid(SpaceElement):
         for _ in range(3):
             self.smaller_asteroid_creation()        
 
-        self.level -= 1
+        for asteroid in self.layer.game.asteroids[:]:
+            if self.id == asteroid.id:
+                self.layer.game.asteroids.remove(asteroid)
+
+                # ok this works to detect absence of asteroids, but doesn't remove them when reset and now 4 asteroids appear
+                # a fourth asteroid appears, and asteroid destructions cause fourth asteroids to appears
+        
+        print(self.layer.game.asteroids)
 
     def on_collision(self, other):
         super().on_collision(other)
@@ -394,14 +406,15 @@ class Ship(SpaceElement):
             if k == key.LEFT:
                 self.rotation_speed += 200
 
-        if k == key.SPACE:
-            self.shooting = False
+            if k == key.SPACE:
+                self.shooting = False
 
     def destroy(self):
         if self.lives < self.max_lives + 1 and self.lives > 0:
             if self.invincible <= 0.0:
                     self.lives -= 1
-                    if self.lives < 0:
+                    if self.lives <= 0:
+                        self.shooting = False
                         self.opacity = 0
                     else:
                         self.invincible = 3

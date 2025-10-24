@@ -3,11 +3,8 @@ from pyglet.window import key
 from math import radians, cos, sin
 from random import randint
 
-RESOLUTION = (800, 600)
-CENTER = (RESOLUTION[0] / 2, RESOLUTION[1] / 2)
-
-# Most sprites -- not the life sprites or certain text sprites -- will have a central anchor, 
-# which we'll specify individually because the default anchor (0, 0) is on the bottom left corner.
+RESOLUTION = [800, 600]
+CENTER = [RESOLUTION[0]/2, RESOLUTION[1]/2]
 
 class AsteroidGame(Game):
 
@@ -15,13 +12,13 @@ class AsteroidGame(Game):
 
         super().__init__()
 
-        # Creating the gamestate and setting it to start
+        # Creating and setting the gamestate to start
 
         self.gamestate = "start"
 
         # Creating the player's game element: the ship
 
-        ship_start_position = CENTER[0], CENTER[1] - 20
+        ship_start_position = CENTER[0], CENTER [1] - 20
         self.ship = Ship(ship_start_position)
 
         # Creating the background layer
@@ -29,9 +26,10 @@ class AsteroidGame(Game):
         self.background_layer = Layer()
         self.background_layer.add(Sprite("images/pixel_background.png"))
 
-        # Creating the game layer, giving it access to the ship
+        # Creating the game layer and adding the ship
 
-        self.game_layer = GameLayer(self.ship)
+        self.game_layer = Layer()
+        self.game_layer.add(self.ship)
 
         # Creating the UI layer, giving it access to the ship
 
@@ -41,26 +39,6 @@ class AsteroidGame(Game):
 
         self.add(self.background_layer, self.game_layer, self.ui_layer)
 
-    def reset(self):
-
-    # Tells the GameLayer to reset its items -- this is called by the UILayer when the player hits space on controls, victory or gameover screens
-
-        self.game_layer.reset()
-
-class GameLayer(Layer):
-
-    def __init__(self, ship):
-
-        super().__init__()
-
-        # Storing the ship's reference
-
-        self.ship = ship
-
-        # Setting the ship to display on this layer
-
-        self.add(self.ship)
-
         # Creating a list of asteroids
 
         self.asteroids = []
@@ -69,24 +47,13 @@ class GameLayer(Layer):
 
         self.bullets = []
 
-        # Creating the first batch of asteroids
+        # Creating a new batch of asteroids and adding them to the game layer
 
-        self.generate_first_asteroids()
-
-    def update(self, dt):
-
-        super().update(dt)
-
-        # When there are no more asteroids, victory is declared
-
-        if self.game.gamestate == "play":
-
-            if len(self.asteroids) == 0:
-                self.game.gamestate = "victory"
-        
+        self.generate_asteroid_batch(3, tag = "random_position")
+    
     def random_position(self):
 
-    # Creates a random start position away from the center of the screen
+        # Creates a random start position away from center of screen
         
         position_x = randint(0, 800)
         position_y = randint(0, 600)
@@ -100,43 +67,25 @@ class GameLayer(Layer):
         start_position = position_x, position_y
         return start_position
 
-    def generate_asteroid_batch(self, amount, position = [0, 0], level = 3, tag = ""):
+    def generate_asteroid_batch(self, amount, position = [0,0], level = 3, tag = ""):
 
-    # Generates a batch of asteroids in a given or random position
+        # Generates a batch of asteroids in a given or random position
 
         for asteroid in range(amount): 
-
             if tag == "random_position":
                 position = self.random_position()
-
-            # Creating the asteroid sprite
-
             asteroid = Asteroid(position, level)
-
-            # Adding each asteroid to a list of asteroids
-
             self.asteroids.append(asteroid)
-
-            # Adding each asteroid to the layer
-
-            self.add(asteroid)
-
-    def generate_first_asteroids(self):
-
-    # Generates the first three asteroids in a random position away from the center of the screen
-
-        self.generate_asteroid_batch(3, tag = "random_position")
+            self.game_layer.add(asteroid)
 
     def reset(self):
 
-    # Resets the GameLayer's items
-
-        # Destroying any asteroids on screen -- destroying them removes them from the asteroid list
+        # Destroying any asteroids on screen - destroying them clears the list
 
         for asteroid in self.asteroids[:]:
             asteroid.destroy()
 
-        # Destroying any bullets on screen and clearing the bullet list
+        # Destroying any bullets on screen and clearing the list
 
         for bullet in self.bullets[:]:
             bullet.destroy()
@@ -158,11 +107,20 @@ class GameLayer(Layer):
 
         # Generating the first 3 asteroids
 
-        self.generate_first_asteroids()
+        self.generate_asteroid_batch(3)
 
         # Setting the gamestate to play
 
-        self.game.gamestate = "play"
+        self.gamestate = "play"
+
+    def update(self, dt):
+
+        super().update(dt)
+
+        # When there are no more asteroids, victory is declared
+
+        if len(self.asteroids) == 0:
+            self.gamestate = "victory"
         
 class UILayer(Layer):
 
@@ -177,43 +135,41 @@ class UILayer(Layer):
         # Creating life sprites to display at the top left of the screen
 
         self.life_sprites = []
-        position = (10, 575)
+        position = [10, 575]
         for life in range(self.ship.max_lives):
             x, y = position
             x += 19 * life
-            life_sprite = Sprite("images/pixel_life.png", (x, y))
+            life_sprite = Sprite("images/pixel_life.png", (x,y))
             self.life_sprites.append(life_sprite)
             self.add(life_sprite)
 
         # Creating start, controls, victory and gameover text sprites
 
-        self.start_title = Sprite("images/asteroids.png", (CENTER[0], CENTER[1] + 18), anchor = (138, 22))
+        self.start_title = Sprite("images/asteroids.png", (CENTER[0], CENTER[1] + 30), anchor = (138, 22))
         self.start_title.opacity = 0
-        self.start_subtitle = Sprite("images/press_space_to_play.png", (CENTER[0], CENTER[1] - 20), anchor = (140, 20))
+        self.start_subtitle = Sprite("images/press_space_to_play.png", (CENTER[0], CENTER[1] - 10), anchor = (140, 10))
         self.start_subtitle.opacity = 0
 
-        self.controls1 = Sprite("images/to_accelerate.png", (CENTER[0], CENTER[1] + 26), anchor = (114, 0))
+        self.controls1 = Sprite("images/to_accelerate.png", (CENTER[0], CENTER[1] + 40), anchor = (114, 10))
         self.controls1.opacity = 0
-        self.controls2 = Sprite("images/to_turn.png", (CENTER[0], CENTER[1] + 0), anchor = (110, 10))
+        self.controls2 = Sprite("images/to_turn.png", (CENTER[0], CENTER[1] + 10), anchor = (110, 10))
         self.controls2.opacity = 0
-        self.controls3 = Sprite("images/space_to_shoot.png", (CENTER[0], CENTER[1] - 26), anchor = (102, 20))
+        self.controls3 = Sprite("images/space_to_shoot.png", (CENTER[0], CENTER[1] - 20), anchor = (102, 10))
         self.controls3.opacity = 0
 
-        self.victory_subtitle1 = Sprite("images/you_re_safe_now.png", (CENTER[0], CENTER[1] + 38), anchor = (122, 0))
+        self.victory_subtitle1 = Sprite("images/you_re_safe_now.png", (CENTER[0], CENTER[1] + 84), anchor = (122,24))
         self.victory_subtitle1.opacity = 0
-        self.victory_title = Sprite("images/victory.png", (CENTER[0], CENTER[1]), anchor = (114, 22))
+        self.victory_title = Sprite("images/victory.png", (CENTER[0], CENTER[1] - 6), anchor = (114, 22))
         self.victory_title.opacity = 0
-        self.victory_subtitle2 = Sprite("images/press_space_to_play_again.png", (CENTER[0], CENTER[1] - 38), anchor = (178, 20))
+        self.victory_subtitle2 = Sprite("images/press_space_to_play_again.png", (CENTER[0], CENTER[1] - 82), anchor = (178, 10))
         self.victory_subtitle2.opacity = 0
 
-        self.gameover_subtitle1 = Sprite("images/in_space_no_one_can_hear_your_ship_explode2.png", (CENTER[0], CENTER[1] + 20), anchor = (166, 0))
+        self.gameover_subtitle1 = Sprite("images/in_space_no_one_can_hear_your_ship_explode.png", (CENTER[0], CENTER[1] + 84), anchor = (166,24))
         self.gameover_subtitle1.opacity = 0
-        self.gameover_title = Sprite("images/gameover.png", (CENTER[0], CENTER[1] - 18), anchor = (152, 22))
+        self.gameover_title = Sprite("images/gameover.png", (CENTER[0], CENTER[1] - 6), anchor = (152, 22))
         self.gameover_title.opacity = 0
-        self.gameover_subtitle2 = Sprite("images/press_space_to_try_again.png", (CENTER[0], CENTER[1] - 56), anchor = (170, 20))
+        self.gameover_subtitle2 = Sprite("images/press_space_to_try_again.png", (CENTER[0], CENTER[1] - 82), anchor = (170, 10))
         self.gameover_subtitle2.opacity = 0
-
-        # Setting the sprites to display on this layer
 
         self.add(self.start_title, self.start_subtitle, 
                  self.controls1, self.controls2, self.controls3,
@@ -227,24 +183,20 @@ class UILayer(Layer):
         # Displaying ship's remaining lives
 
         for index, _ in enumerate(self.life_sprites):
-
             if (index < self.ship.lives
                 and (self.game.gamestate == "play"
                     or self.game.gamestate == "victory")):
                 self.life_sprites[index].opacity = 255
-                
             else:
                 self.life_sprites[index].opacity = 0
 
-        # Depending on the gamestate, displaying the corresponding text sprites
+        # Depending on the gamestate, displaying different text sprites
 
         if self.game.gamestate == "start":
-
             self.start_title.opacity = 255
             self.start_subtitle.opacity = 255
 
         elif self.game.gamestate == "controls":
-
             self.start_title.opacity = 0
             self.start_subtitle.opacity = 0
 
@@ -253,7 +205,6 @@ class UILayer(Layer):
             self.controls3.opacity = 255
 
         elif self.game.gamestate == "victory":
-
             self.victory_subtitle1.opacity = 255
             self.victory_title.opacity = 255
             self.victory_subtitle2.opacity = 255
@@ -263,7 +214,6 @@ class UILayer(Layer):
             self.gameover_subtitle2.opacity = 0
 
         elif self.game.gamestate == "gameover":
-
             self.victory_subtitle1.opacity = 0
             self.victory_title.opacity = 0
             self.victory_subtitle2.opacity = 0
@@ -273,7 +223,6 @@ class UILayer(Layer):
             self.gameover_subtitle2.opacity = 255
 
         else:
-
             self.start_title.opacity = 0
             self.start_subtitle.opacity = 0
 
@@ -291,31 +240,24 @@ class UILayer(Layer):
 
     def on_key_press(self, k, modifiers):
 
-    # Sets up the game to move to the next screen or reset on space bar press
+    # Sets up game to restart on space bar press (Can only be used in a layer)
 
         if k == key.SPACE:
-
             if self.game.gamestate == "start":
                 self.game.gamestate = "controls"
-
             elif (self.game.gamestate == "controls" 
                 or self.game.gamestate == "gameover" 
                 or self.game.gamestate == "victory"):
                 self.game.reset()
-
+        
 class SpaceElement(Sprite):
 
     def __init__(self, image, position, anchor, initial_speed = [0, 0], collision_shape = "rectangle"):
 
-    # Creates the sprite at a given position
-
         super().__init__(image, position, anchor = anchor, collision_shape = collision_shape)
-
         self.speed = initial_speed
 
     def update(self, dt):
-
-    # Updates the sprite's position and keeps it onscreen
 
         super().update(dt)
 
@@ -327,7 +269,7 @@ class SpaceElement(Sprite):
         x += speed_x * dt
         y += speed_y * dt
 
-        # Getting the sprite's bounding box to check its position on the screen
+        # Getting the sprite's bounding box to check its position in the screen
 
         rect = self.get_rect()
 
@@ -335,16 +277,14 @@ class SpaceElement(Sprite):
         # If not, setting its position to the opposite side of the screen, just offscreen
 
         if rect.left > RESOLUTION[0]:
-            x = - self.image_anchor_x
-
+            x = - self.anchor[0]
         elif rect.right < 0:
-            x = RESOLUTION[0] + self.image_anchor_x
+            x = RESOLUTION[0] + self.anchor[0] 
 
         if rect.bottom > RESOLUTION[1]:
-            y = - self.image_anchor_y
-
+            y = - self.anchor[1] 
         elif rect.top < 0:
-            y = RESOLUTION[1] + self.image_anchor_y
+            y = RESOLUTION[1] + self.anchor[1] 
 
         # Applying the Sprite's position
 
@@ -354,7 +294,8 @@ class Asteroid(SpaceElement):
 
     def __init__(self, position, level = 3):
 
-        # Defining the image for the asteroid Sprite depending on its level, with a random rotation speed
+        # Defining the image for the asteroid Sprite depending on its level, 
+        # with a central anchor and a random rotation speed
 
         self.stats = {
             3: {
@@ -386,7 +327,6 @@ class Asteroid(SpaceElement):
         # Creating the asteroid sprite
 
         super().__init__(image, position, anchor, initial_speed, "circle")
-
         self.rotation_speed = self.stats[self.level]["rotation_speed"]
         self.rotation = 0
         
@@ -397,29 +337,6 @@ class Asteroid(SpaceElement):
         super().update(dt)
 
         self.rotation += self.rotation_speed * dt
-
-    def on_collision(self, other):
-
-        super().on_collision(other)
-
-        # Hitting a bullet will destroy the asteroid and generate smaller asteroids, if possible.
-
-        if isinstance(other, Bullet):
-
-            self.generate_smaller_asteroids(3)
-            self.destroy()
-
-    def destroy(self):
-        
-        # Destroying the asteroid sprite
-
-        super().destroy()
-
-        # Removing the asteroid from the asteroid list   
-
-        for asteroid in self.layer.asteroids[:]:
-            if self == asteroid:
-                self.layer.asteroids.remove(asteroid)
 
     def generate_smaller_asteroids(self, amount):
 
@@ -436,17 +353,37 @@ class Asteroid(SpaceElement):
         
         # Creating the batch of new asteroids
 
-        self.layer.generate_asteroid_batch(amount, self.position, level)
+        self.layer.game.generate_asteroid_batch(amount, self.position, level)
+
+    def destroy(self):
+
+        super().destroy()       
+
+        for asteroid in self.layer.game.asteroids[:]:
+            if self == asteroid:
+                self.layer.game.asteroids.remove(asteroid)
+
+    def on_collision(self, other):
+
+        super().on_collision(other)
+        
+        # Hitting an ship will cause it to lose a life or disappear completely
+
+        if isinstance(other, Ship):
+            other.is_hit()
+
+        # Hitting a bullet will trigger asteroid destruction and generate smaller asteroids, if possible.
+
+        if isinstance(other, Bullet):
+
+            self.generate_smaller_asteroids(3)
+            self.destroy()
 
 class Ship(SpaceElement):
 
     def __init__(self, position):
 
-        # Creating the ship sprite
-
         super().__init__("images/pixel_ship.png", position, (32, 64), collision_shape = "circle")
-
-        # Configuring all the ship's default variable values and some working variables
 
         self.max_lives = 6
 
@@ -468,7 +405,7 @@ class Ship(SpaceElement):
         self.default_starting_shot_prevention = 0.1
         self.starting_shot_prevention = self.default_starting_shot_prevention
 
-        self.bullet_anchor = (8, 8)
+        self.bullet_anchor = (8,8)
 
         self.shooting = False
 
@@ -484,9 +421,10 @@ class Ship(SpaceElement):
 
         speed_x, speed_y = self.speed
 
-        # Getting the ship's angle -- accounting for the fact that, in our engine, angles start at (0, 1) in orthogonal coordinates and increase clockwise,
-        # whereas in traditional mathematics, angles start at (0, 0) and increase counterclockwise
-        # We're storing it because we also use the angle to determine bullet trajectory
+        # Getting the ship's angle
+
+        # Accounting for the fact that angles start at (0, 1) in orthogonal coordinates and increase clockwise in our engine
+        # Whereas in traditional mathematics, angles start at (0, 0) and increase counterclockwise
 
         self.angle = radians(-self.rotation + 90)
 
@@ -501,8 +439,8 @@ class Ship(SpaceElement):
 
         super().update(dt)
 
-        # Preparing the ship's rotation to update in the next frame 
-        # -- to emulate the slight lag between the rotation of a ship and the change in the direction of its acceleration
+        # Preparing the ship's rotation to update in the next frame -
+        # to emulate the slight lag between the rotation of a ship and the change in the direction of its acceleration
         
         self.rotation += self.rotation_speed * dt
 
@@ -514,11 +452,9 @@ class Ship(SpaceElement):
         # Managing the cooldown between shots
 
         if self.shooting:
-
             if self.cooldown <= 0.0:
                 self.shoot()
                 self.cooldown = 0.15
-
             else:
                 self.cooldown -= dt
 
@@ -526,11 +462,9 @@ class Ship(SpaceElement):
 
         if (self.layer.game.gamestate == "play" 
             or self.layer.game.gamestate == "victory"):
-
             if self.invincibility > 0.0:
                 self.invincibility -= dt
                 self.opacity = 125
-
             else:
                 self.opacity = 255
 
@@ -541,12 +475,40 @@ class Ship(SpaceElement):
             or self.layer.game.gamestate == "gameover"):
             self.opacity = 0
 
+    def shoot(self):
+        
+        if ((self.layer.game.gamestate == "play" 
+                or self.layer.game.gamestate == "victory") 
+            and self.starting_shot_prevention <= 0.0):
+
+            # Creating a bullet going faster than the ship, in the direction it is facing
+
+            bullet_speed = 500
+
+            angle = radians(-self.rotation + 90)
+
+            speed_x = cos(angle) * bullet_speed
+            speed_y = sin(angle) * bullet_speed
+
+            position_x = self.position[0] + (self.image_anchor[1] + self.bullet_anchor[1]) * cos(angle)
+            position_y = self.position[1] + (self.image_anchor[1] + self.bullet_anchor[1]) * sin(angle)
+
+            bullet_position = position_x, position_y
+
+            bullet = Bullet(bullet_position, self.bullet_anchor, [speed_x, speed_y], self.rotation)
+
+            self.layer.game.bullets.append(bullet)
+            
+            self.layer.add(bullet)
+
     def on_key_press(self, k, modifiers):
+
+        # Checking whether the game is in "play mode" and not on a start, gameover or victory screen
 
         if (self.layer.game.gamestate == "play" 
             or self.layer.game.gamestate == "victory"):
 
-            # Arrow keys trigger forward movement and rotation
+            # Arrow keys trigger forward movement and rotation, 
 
             if k == key.UP:
                 self.acceleration = 400
@@ -569,6 +531,7 @@ class Ship(SpaceElement):
         if (self.layer.game.gamestate == "play" 
             or self.layer.game.gamestate == "victory"):
 
+
             if k == key.UP:
                 self.acceleration = 0
 
@@ -582,65 +545,24 @@ class Ship(SpaceElement):
             self.shooting = False
             self.cooldown = 0.0
 
-    def on_collision(self, other):
+    def is_hit(self):
 
-        super().on_collision(other)
+        # Managing the ship's lives and invincibility when hit
+        # Hitting 0 zero lives "destroys" the ship
 
-        if isinstance(other, Asteroid):
+        if (self.layer.game.gamestate == "play"):
+            if self.invincibility <= 0.0:
+                    self.lives -= 1
+                    if self.lives > 0:
+                        self.invincibility = 3
+                    else:
+                        self.destroy()
 
-            if (self.layer.game.gamestate == "play"):
+    def destroy(self):
 
-                if self.invincibility <= 0.0:
-                        
-                        # When not invincible, hitting an asteroid will cause the ship to lose a life
+    # Triggers "gameover" gamestate
 
-                        self.lives -= 1
-
-                        if self.lives > 0:
-
-                            # If the ship has any lives left, it will be temporarily invincible
-
-                            self.invincibility = 3
-
-                        else:
-                        
-                        # When all lives are lost, the game is over
-
-                            self.layer.game.gamestate = "gameover"
-
-    def shoot(self):
-
-    # Creates a bullet that is projected forwards, faster than the ship
-        
-        if ((self.layer.game.gamestate == "play" 
-                or self.layer.game.gamestate == "victory") 
-            and self.starting_shot_prevention <= 0.0):
-
-            velocity = 500
-
-            # Determining the bullet's speed based on the ship's angle
-
-            speed_x = cos(self.angle) * velocity
-            speed_y = sin(self.angle) * velocity
-
-            # Using the angle and the height of the ship sprite to position the bullet in front of the ship
-
-            bullet_position_x = self.position[0] + (self.image_anchor_y + self.bullet_anchor[1]) * cos(self.angle)
-            bullet_position_y = self.position[1] + (self.image_anchor_y + self.bullet_anchor[1]) * sin(self.angle)
-
-            bullet_position = bullet_position_x, bullet_position_y
-
-            # Creating the bullet sprite
-
-            bullet = Bullet(bullet_position, self.bullet_anchor, [speed_x, speed_y], self.rotation)
-
-            # Adding the bullet to the list of bullets
-
-            self.layer.bullets.append(bullet)
-
-            # Adding the bullet to the layer
-            
-            self.layer.add(bullet)
+        self.layer.game.gamestate = "gameover"
 
 class Bullet(SpaceElement):
 
@@ -650,17 +572,8 @@ class Bullet(SpaceElement):
 
         super().__init__("images/pixel_bullet.png", position, anchor, initial_speed, collision_shape="circle")
         self.rotation = rotation
+        self.start_position = position
         self.lifetime = 3.0
-
-    def update(self, dt):
-
-    # Updates the bullet's position and destroys it once its lifetime has expired
-
-        super().update(dt)
-        self.lifetime -= dt
-
-        if self.lifetime <= 0:
-            self.destroy()
 
     def on_collision(self, other):
 
@@ -671,7 +584,14 @@ class Bullet(SpaceElement):
             self.destroy()
     
     def destroy(self):
-
-    # Destroys the bullet sprite
-
         super().destroy()
+
+    def update(self, dt):
+
+    # Updates the bullet's position and destroys it once its lifetime has expired
+
+        super().update(dt)
+        self.lifetime -= dt
+
+        if self.lifetime <= 0:
+            self.destroy()
