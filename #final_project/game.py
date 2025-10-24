@@ -27,7 +27,7 @@ class AsteroidGame(Game):
         # Creating the background layer
 
         self.background_layer = Layer()
-        self.background_layer.add(Sprite("images/pixel_background.png"))
+        self.background_layer.add(Sprite("pixel_background.png"))
 
         # Creating the game layer, giving it access to the ship
 
@@ -181,36 +181,36 @@ class UILayer(Layer):
         for life in range(self.ship.max_lives):
             x, y = position
             x += 19 * life
-            life_sprite = Sprite("images/pixel_life.png", (x, y))
+            life_sprite = Sprite("pixel_life.png", (x, y))
             self.life_sprites.append(life_sprite)
             self.add(life_sprite)
 
         # Creating start, controls, victory and gameover text sprites
 
-        self.start_title = Sprite("images/asteroids.png", (CENTER[0], CENTER[1] + 18), anchor = (138, 22))
+        self.start_title = Sprite("asteroids.png", (CENTER[0], CENTER[1] + 18), anchor = (138, 22))
         self.start_title.opacity = 0
-        self.start_subtitle = Sprite("images/press_space_to_play.png", (CENTER[0], CENTER[1] - 20), anchor = (140, 20))
+        self.start_subtitle = Sprite("press_space_to_play.png", (CENTER[0], CENTER[1] - 20), anchor = (140, 20))
         self.start_subtitle.opacity = 0
 
-        self.controls1 = Sprite("images/to_accelerate.png", (CENTER[0], CENTER[1] + 26), anchor = (114, 0))
+        self.controls1 = Sprite("to_accelerate.png", (CENTER[0], CENTER[1] + 26), anchor = (114, 0))
         self.controls1.opacity = 0
-        self.controls2 = Sprite("images/to_turn.png", (CENTER[0], CENTER[1] + 0), anchor = (110, 10))
+        self.controls2 = Sprite("to_turn.png", (CENTER[0], CENTER[1] + 0), anchor = (110, 10))
         self.controls2.opacity = 0
-        self.controls3 = Sprite("images/space_to_shoot.png", (CENTER[0], CENTER[1] - 26), anchor = (102, 20))
+        self.controls3 = Sprite("space_to_shoot.png", (CENTER[0], CENTER[1] - 26), anchor = (102, 20))
         self.controls3.opacity = 0
 
-        self.victory_subtitle1 = Sprite("images/you_re_safe_now.png", (CENTER[0], CENTER[1] + 38), anchor = (122, 0))
+        self.victory_subtitle1 = Sprite("you_re_safe_now.png", (CENTER[0], CENTER[1] + 38), anchor = (122, 0))
         self.victory_subtitle1.opacity = 0
-        self.victory_title = Sprite("images/victory.png", (CENTER[0], CENTER[1]), anchor = (114, 22))
+        self.victory_title = Sprite("victory.png", (CENTER[0], CENTER[1]), anchor = (114, 22))
         self.victory_title.opacity = 0
-        self.victory_subtitle2 = Sprite("images/press_space_to_play_again.png", (CENTER[0], CENTER[1] - 38), anchor = (178, 20))
+        self.victory_subtitle2 = Sprite("press_space_to_play_again.png", (CENTER[0], CENTER[1] - 38), anchor = (178, 20))
         self.victory_subtitle2.opacity = 0
 
-        self.gameover_subtitle1 = Sprite("images/in_space_no_one_can_hear_your_ship_explode.png", (CENTER[0], CENTER[1] + 20), anchor = (166, 0))
+        self.gameover_subtitle1 = Sprite("in_space_no_one_can_hear_your_ship_explode.png", (CENTER[0], CENTER[1] + 20), anchor = (166, 0))
         self.gameover_subtitle1.opacity = 0
-        self.gameover_title = Sprite("images/gameover.png", (CENTER[0], CENTER[1] - 18), anchor = (152, 22))
+        self.gameover_title = Sprite("gameover.png", (CENTER[0], CENTER[1] - 18), anchor = (152, 22))
         self.gameover_title.opacity = 0
-        self.gameover_subtitle2 = Sprite("images/press_space_to_try_again.png", (CENTER[0], CENTER[1] - 56), anchor = (170, 20))
+        self.gameover_subtitle2 = Sprite("press_space_to_try_again.png", (CENTER[0], CENTER[1] - 56), anchor = (170, 20))
         self.gameover_subtitle2.opacity = 0
 
         # Setting the sprites to display on this layer
@@ -358,17 +358,17 @@ class Asteroid(SpaceElement):
 
         self.stats = {
             3: {
-            "image": "images/pixel_asteroid128.png",
+            "image": "pixel_asteroid128.png",
             "anchor": (64,64), 
             "rotation_speed": randint(-20, 20)
             }, 
             2: {
-            "image": "images/pixel_asteroid64.png",
+            "image": "pixel_asteroid64.png",
             "anchor": (32,32),
             "rotation_speed": randint(-40, 40)
             }, 
             1: {
-            "image": "images/pixel_asteroid32.png",
+            "image": "pixel_asteroid32.png",
             "anchor": (16, 16),
             "rotation_speed": randint(-80, 80)
             }
@@ -444,7 +444,7 @@ class Ship(SpaceElement):
 
         # Creating the ship sprite
 
-        super().__init__("images/pixel_ship.png", position, (32, 64), collision_shape = "circle")
+        super().__init__("pixel_ship.png", position, (32, 64), collision_shape = "circle")
 
         # Configuring all the ship's default variable values and some working variables
 
@@ -648,7 +648,7 @@ class Bullet(SpaceElement):
 
     # Creates a bullet, with a set lifetime
 
-        super().__init__("images/pixel_bullet.png", position, anchor, initial_speed, collision_shape="circle")
+        super().__init__("pixel_bullet.png", position, anchor, initial_speed, collision_shape="circle")
         self.rotation = rotation
         self.lifetime = 3.0
 

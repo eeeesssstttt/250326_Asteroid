@@ -1,0 +1,1 @@
+pyinstaller main.py --onefile --noconsole --add-data="C:\Users\Estelle\Desktop\old_asteroid\250326_Asteroid\#final_project\images\*;."   
