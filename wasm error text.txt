@@ -1,0 +1,127 @@
+OK
+Please wait ...
+807: DEV MODE ON ['http://localhost:8000/archives/repo/']
+655: preload_code(len(code)=4992 hint='/data/data/org.python/assets/__main__.py' loaderhome='.')
+['/usr/lib/python312.zip', '/usr/lib/python3.12', '/usr/lib/python3.12/lib-dynload', '/usr/lib/python3.12/site-packages', '/data/data/org.python/assets/site-packages', '/data/data/org.python/assets', '.']
+200: async_repos ['https://pygame-web.github.io/archives/repo/']
+76: fopen: fetching "https://pygame-web.github.io/archives/repo/index-090-cp312.json"
+232: http://localhost:8000/#debug
+
+
+======  REDIRECT TO DEV HOST http://localhost:8000/archives/repo/  ========
+abitag='cp312'
+apitag='wasm32_bi_emscripten'
+
+
+76: fopen: fetching "https://pygame-web.github.io/archives/repo/repodata.json"
+650: FIXME (this is pyodide maintened stuff, use (auto)PEP723 asap)
+651: referenced packages : 184
+654: aio.pep0723.check_list aio.pep0723.env=PosixPath('/data/data/org.python/assets/build/env')
+
+----------- computing required packages ----------
+392: parse_code() patches loaded : ['matplotlib', 'panda3d', 'wcwidth', 'pygame.base', 'textual']
+200: async_repos ['https://pygame-web.github.io/archives/repo/']
+76: fopen: fetching "https://pygame-web.github.io/archives/repo/index-090-cp312.json"
+232: http://localhost:8000/#debug
+
+
+======  REDIRECT TO DEV HOST http://localhost:8000/archives/repo/  ========
+abitag='cp312'
+apitag='wasm32_bi_emscripten'
+
+
+{}
+----------------------------------------
+
+656: aio.pep0723.pip_install deps=[]
+
+1214: list_imports len(code)=4992 file=None hint='/data/data/org.python/assets/__main__.py'")
+aio.pep0723.Config.pkg_repolist[0]['-CDN-']='http://localhost:8000/archives/repo/'
+
+
+1153: scan_imports hint='/data/data/org.python/assets/__main__.py' filename='<stdin>' len(code)=4992 ['pygame.base']
+635: maybe_wanted=['pygame.base'] known failed aio.pep0723.hint_failed=[]
+282: searching pygame.base
+76: fopen: fetching "http://localhost:8000/archives/repo/cp312/pygame_static-1.0-cp312-cp312-wasm32_bi_emscripten.whl#"
+142: /tmp/pygame_static-1.0-cp312-cp312-wasm32_bi_emscripten.whl installed
+254: patching pygame.base
+pygame-ce 2.5.0.dev1 (SDL 2.28.4, Python 3.12.2)
+https://github.com/pygame-web/pygbag/issues/16
+    applying: use aio green thread for pygame.time.set_timer
+
+
+
+
+
+
+
+
+
+
+
+
+
+sys._emscripten_info(emscripten_version=(3, 1, 56), runtime='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0', pthreads=False, shared_memory=False)
+715: starting shell
+1039: 213 lines queued for async eval
+Loading asteroids from asteroids.apk
+    Pygbag Version : 0.9.2
+    Template Version : 0.9.0
+    Python  : 3.12
+    CDN URL : http://localhost:8000//archives/0.9/
+    Screen  : 1280x720
+    Title   : asteroids
+    Folder  : asteroids
+    Authors : pgw
+    SPDX-License-Identifier: cookiecutter.spdx
+
+
+1764: __file__='/data/data/org.python/assets/__main__.py' done : now trying user sources
+1830: local=None source='' is_py=False hint='main.py'
+1867: local=None source='' is_py=False hint='main.py'
+404: embed= or sys.argv=['debug']
+651: starting EventTarget in a few seconds
+
+Python 3.12.2 (main, Mar  5 2024, 11:18:41) [Clang 19.0.0git (https:/github.com/llvm/llvm-project aec6a04b8e99b42eca431fc0b5 on emscripten
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 309: assets found : 0
+364: EventTarget delayed by loader
+/data/data/org.python/assets/site-packages/pygame/sysfont.py:235: UserWarning: no fc_cache font cache file at /data/data/asteroids/assets/fc_cache
+  warnings.warn(f"no fc_cache font cache file at {fc_cache}")
+
+        * Waiting for media user engagement : please click/touch page *
+    
+690: : runpy(main=PosixPath('/data/data/asteroids/assets/main.py'))
+655: preload_code(len(code)=578 hint=PosixPath('/data/data/asteroids/assets/main.py') loaderhome='.')
+654: aio.pep0723.check_list aio.pep0723.env=PosixPath('/data/data/org.python/assets/build/env')
+
+----------- computing required packages ----------
+Task exception was never retrieved
+future: <Task finished name='custom_site' coro=<custom_site() done, defined at <console>:52> exception=TOMLDecodeError('Unclosed array (at line 7, column 2)')>
+Traceback (most recent call last):
+  File "<console>", line 186, in custom_site
+  File "<string>", line 809, in runpy
+  File "<string>", line 702, in preload_code
+  File "/data/data/org.python/assets/site-packages/aio/pep0723.py", line 401, in check_list
+    still_missing = await parse_code(code, env)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/org.python/assets/site-packages/aio/pep0723.py", line 347, in parse_code
+    for req in read_dependency_block_723(code):
+  File "/data/data/org.python/assets/site-packages/aio/pep0723.py", line 122, in read_dependency_block_723
+    struct = tomllib.loads("\n".join(content))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tomllib/_parser.py", line 102, in loads
+    pos = key_value_rule(src, pos, out, header, parse_float)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tomllib/_parser.py", line 326, in key_value_rule
+    pos, key, value = parse_key_value_pair(src, pos, parse_float)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tomllib/_parser.py", line 369, in parse_key_value_pair
+    pos, value = parse_value(src, pos, parse_float)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tomllib/_parser.py", line 616, in parse_value
+    return parse_array(src, pos, parse_float)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tomllib/_parser.py", line 428, in parse_array
+    raise suffixed_err(src, pos, "Unclosed array")
+tomllib.TOMLDecodeError: Unclosed array (at line 7, column 2)

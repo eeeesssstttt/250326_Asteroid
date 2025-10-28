@@ -1,0 +1,11 @@
+if3_game-2022.3.1.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+if3_game-2022.3.1.dist-info/METADATA,sha256=6bp0lVDhwcRDralnklLzksQjTi2Kia_-YyDRxSKLb7M,266
+if3_game-2022.3.1.dist-info/RECORD,,
+if3_game-2022.3.1.dist-info/REQUESTED,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
+if3_game-2022.3.1.dist-info/WHEEL,sha256=G16H4A3IeoQmnOrYV4ueZGKSjhipXx8zc8nu9FGlvMA,92
+if3_game-2022.3.1.dist-info/direct_url.json,sha256=VoIVxM8czyXsuJzvkuox5RKrHPrZYG6ZNNvMnFzSpf4,298
+if3_game-2022.3.1.dist-info/top_level.txt,sha256=LPy1LAqyUZEVwIoANYCTQAuqXOHhDw2EXF34NCn032c,9
+if3_game/__init__.py,sha256=6ADhYD6rVoDCCMarsDMYvW4G3A6yINaHerDqt4r0RCs,26
+if3_game/__pycache__/__init__.cpython-313.pyc,,
+if3_game/__pycache__/engine.cpython-313.pyc,,
+if3_game/engine.py,sha256=z_OEIfrFCoMKyjelvvg48TzleRd8FehgyfQfgI5Ka5Y,8240
